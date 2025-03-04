@@ -1,1 +1,66 @@
-<p>home works!</p>
+<div class="home-container">
+  <h1 class="title">Roadtrip en Toscane, tra MV 🇮🇹</h1>
+
+  <div
+    *ngIf="currentStageIndex === null"
+    class="trip-card waiting-card"
+    (swipeleft)="onSwipeLeft()"
+  >
+    <h2>Encore un peu de patience, le voyage va bientôt commencer !</h2>
+    <p class="countdown">{{ countdown }}</p>
+    <p class="swipe-indicator">Mais on peut quand même en voir les étapes !</p>
+    <p class="swipe-indicator">Swipe vers la droite ➡️</p>
+
+  </div>
+
+  <div
+    *ngIf="currentStageIndex !== null"
+    class="trip-card {{ swipeDirection }}"
+    (swipeleft)="onSwipeLeft()"
+    (swiperight)="onSwipeRight()"
+  >
+    <h2 *ngIf="tripStages[currentStageIndex]?.train?.destination" class="city">{{ tripStages[currentStageIndex]?.ville }}
+    vers {{ tripStages[currentStageIndex]?.train?.destination }} 📍</h2>
+    <h2 *ngIf="!tripStages[currentStageIndex]?.train?.destination" class="city">{{ tripStages[currentStageIndex]?.ville }} 📍</h2>
+    <p class="date">{{ tripStages[currentStageIndex]?.date | date:'EEEE d MMMM' }}</p>
+
+    <!-- Bloc Train -->
+    <div *ngIf="tripStages[currentStageIndex]?.train" class="info-section">
+      <h3>🚆 Voyage </h3>
+      <p>
+        <strong>Départ à {{ tripStages[currentStageIndex]?.train?.heure_depart }} </strong> de
+        <a (click)="openInMaps(tripStages[currentStageIndex]?.train?.adresse_gare_depart ?? '')">
+          {{ tripStages[currentStageIndex]?.train?.adresse_gare_depart }}
+        </a>
+      </p>
+      <p>
+        <strong>Arrivée à {{ tripStages[currentStageIndex]?.train?.heure_arrivee }} </strong> à
+        <a (click)="openInMaps(tripStages[currentStageIndex]?.train?.adresse_gare_arrivee ?? '')">
+          {{ tripStages[currentStageIndex]?.train?.adresse_gare_arrivee }}
+        </a>
+      </p>
+      <div *ngIf="tripStages[currentStageIndex]?.train?.docs">
+        <a [href]="tripStages[currentStageIndex]?.train?.docs" target="_blank">
+          📄 Voir les billets
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="tripStages[currentStageIndex]?.logement" class="info-section">
+      <h3>🏠 Logement</h3>
+      <p>
+        <strong>Adresse :</strong>
+        <a (click)="openInMaps(tripStages[currentStageIndex]?.logement?.adresse ?? '')">
+          {{ tripStages[currentStageIndex]?.logement?.adresse }}
+        </a>
+      </p>
+      <p *ngIf="tripStages[currentStageIndex]?.logement?.heure_arrivee">🧳 Check-in: {{ tripStages[currentStageIndex]?.logement?.heure_arrivee }}</p>
+      <p *ngIf="tripStages[currentStageIndex]?.logement?.heure_depart">🚪 Check-out: {{ tripStages[currentStageIndex]?.logement?.heure_depart }}</p>
+      <div *ngIf="tripStages[currentStageIndex]?.logement?.docs">
+        <a [href]="tripStages[currentStageIndex]?.logement?.docs" target="_blank">
+          📄 Voir le document
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
